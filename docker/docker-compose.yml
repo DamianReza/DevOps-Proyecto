@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  web:
+    image: docker-web
+    networks:
+      - devops_network
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    networks:
+      - devops_network
+
+networks:
+  devops_network:
+    external: true

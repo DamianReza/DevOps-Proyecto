@@ -1,0 +1,41 @@
+name: DevOps CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: |
+          pip install flask==2.3.3
+      - name: Run unit test
+        run: |
+          # Verifica que el archivo existe y se puede importar
+          python -c "import sys; sys.path.append('docker'); import app; print('Test pasado')"
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+
+      - name: Deploy to S3
+        run: |
+          zip -r deployment.zip docker/
+          aws s3 cp deployment.zip s3://devops-bucket-${{ github.event.repository.owner.id }} --quiet
+          # Nota: Usamos el ID del owner como ejemplo, asegúrate que el nombre coincida con tu bucket de CloudFormation
