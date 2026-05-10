@@ -9,7 +9,7 @@ sudo service docker start
 
 # 3. Instalar dependencias(boto3 y otras necesarias)
 echo "Instalando dependencias..."
-pip3 install boto3
+pip3 install boto3 flask
 
 # 4. Verificar instalaciones
 echo "-----------------------------------"
