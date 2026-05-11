@@ -37,5 +37,5 @@ jobs:
       - name: Deploy to S3
         run: |
           zip -r deployment.zip docker/
-          aws s3 cp deployment.zip s3://devops-bucket-${{ github.event.repository.owner.id }} --quiet
-          # Nota: Usamos el ID del owner como ejemplo, asegúrate que el nombre coincida con tu bucket de CloudFormation
+          aws s3 cp deployment.zip s3://devops-bucket-637423652949 --quiet
+          
